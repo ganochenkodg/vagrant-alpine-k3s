@@ -1,0 +1,22 @@
+---
+- name: Install Helm
+  apk:
+    name: helm
+    update_cache: yes
+    state: present
+    repository: http://dl-cdn.alpinelinux.org/alpine/edge/testing/
+
+- name: Create directory .kube
+  file:
+    path: ~{{ ansible_user }}/.kube
+    state: directory
+    owner: "{{ ansible_user }}"
+    mode: 0750
+
+- name: Copy config file to user home directory
+  copy:
+    src: /etc/rancher/k3s/k3s.yaml
+    dest: ~{{ ansible_user }}/.kube/config
+    remote_src: yes
+    owner: "{{ ansible_user }}"
+    mode: 0600
